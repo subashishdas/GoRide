@@ -281,7 +281,7 @@ Authorization: Bearer <jwt-token>
       "lastName": "Doe"
     },
     "email": "john.doe@example.com",
-    "socketId": null
+    "socketId": null 
   }
 }
 ```
