@@ -281,7 +281,7 @@ Authorization: Bearer <jwt-token>
       "lastName": "Doe"
     },
     "email": "john.doe@example.com",
-    "socketId": null 
+    "socketId": null
   }
 }
 ```
@@ -339,6 +339,164 @@ Authorization: Bearer <jwt-token>
 ```bash
 curl -X GET http://localhost:{PORT}/api/user/logout \
   -H "Authorization: Bearer <jwt-token>"
+```
+
+## Captain Endpoints
+
+### Captain Registration
+
+**Endpoint:** `POST /captain/register`
+
+**Description:** Registers a new captain (driver) in the system with their vehicle information. The endpoint validates all required fields, checks for existing captains, hashes the password, and returns a JWT token for authentication.
+
+**Status Codes:**
+
+- `201 Created` - Captain successfully registered
+- `400 Bad Request` - Validation errors, missing required fields, or captain already exists
+- `500 Internal Server Error` - Server error during captain registration
+
+**Request Headers:**
+
+```
+Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
+{
+  "fullName": {
+    "firstName": "string (required)",
+    "lastName": "string (optional)"
+  },
+  "email": "string (valid email format)",
+  "password": "string (min 6 characters)",
+  "vehicle": {
+    "vehicleType": "car|bike|auto",
+    "vehicleModel": "string (required)",
+    "vehicleCapacity": "number (min 1)",
+    "color": "string (required)",
+    "numberPlate": "string (required)"
+  }
+}
+```
+
+**Required Fields:**
+
+- `fullName.firstName` - Captain's first name (required)
+- `fullName.lastName` - Captain's last name (optional)
+- `email` - Captain's email address (must be valid email format)
+- `password` - Captain's password (minimum 6 characters)
+- `vehicle.vehicleType` - Type of vehicle (must be "car", "bike", or "auto")
+- `vehicle.vehicleModel` - Model of the vehicle (required)
+- `vehicle.vehicleCapacity` - Passenger capacity (minimum 1)
+- `vehicle.color` - Color of the vehicle (required)
+- `vehicle.numberPlate` - Vehicle's number plate (required)
+
+**Validation Rules:**
+
+- First name is required
+- Last name is optional
+- Email must be in valid email format
+- Password must be at least 6 characters long
+- Vehicle type must be one of: "car", "bike", "auto"
+- Vehicle model is required
+- Vehicle capacity must be at least 1
+- Vehicle color is required
+- Number plate is required
+
+**Success Response (201):**
+
+```json
+{
+  "message": "Captain registered successfully",
+  "captain": {
+    "_id": "captain_id",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "vehicle": {
+      "vehicleType": "car",
+      "vehicleModel": "Toyota Camry",
+      "vehicleCapacity": 4,
+      "color": "White",
+      "numberPlate": "ABC123"
+    }
+  },
+  "token": "jwt_token_string"
+}
+```
+
+**Error Response (400) - Validation Error:**
+
+```json
+{
+  "errors": [
+    {
+      "type": "field",
+      "value": "invalid-type",
+      "msg": "Vehicle type must be car, bike, or auto",
+      "path": "vehicle.vehicleType",
+      "location": "body"
+    }
+  ]
+}
+```
+
+**Error Response (400) - Captain Already Exists:**
+
+```json
+{
+  "message": "Captain already exists"
+}
+```
+
+**Example Request:**
+
+```bash
+curl -X POST http://localhost:{PORT}/api/captain/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "password": "password123",
+    "vehicle": {
+      "vehicleType": "car",
+      "vehicleModel": "Toyota Camry",
+      "vehicleCapacity": 4,
+      "color": "White",
+      "numberPlate": "ABC123"
+    }
+  }'
+```
+
+**Example Response:**
+
+```json
+{
+  "message": "Captain registered successfully",
+  "captain": {
+    "_id": "64f8a1b2c3d4e5f6a7b8c9d0",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "vehicle": {
+      "vehicleType": "car",
+      "vehicleModel": "Toyota Camry",
+      "vehicleCapacity": 4,
+      "color": "White",
+      "numberPlate": "ABC123"
+    }
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
 ```
 
 ## Technologies Used
