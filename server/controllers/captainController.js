@@ -1,6 +1,7 @@
 import captainModel from "../models/Captain.js";
 import { createCaptain } from "../services/captainService.js";
 import { validationResult } from "express-validator";
+import BlacklistToken from "../models/BlacklistToken.js";
 
 export const registerCaptain = async (req, res) => {
   // Validate the request data

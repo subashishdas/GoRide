@@ -4,6 +4,7 @@ import {
   registerCaptain,
   loginCaptain,
   getCaptainProfile,
+  logoutCaptain,
 } from "../controllers/captainController.js";
 import { authCaptain } from "../middleware/authMiddleware.js";
 
